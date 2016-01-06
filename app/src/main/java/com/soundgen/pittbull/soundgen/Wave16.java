@@ -7,10 +7,6 @@ package com.soundgen.pittbull.soundgen; /**
  */
 public class Wave16
 {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 3070090589210322951L;
 
     /**
      * Data array that holds sampling data
@@ -61,17 +57,6 @@ public class Wave16
     {
         return new Wave16(data.length, samplingRate);
         //out.setName(Thread.currentThread().getStackTrace()[2].getMethodName());
-    }
-
-    /**
-     * Gives an optional name
-     *
-     * @param n The name
-     * @return This com.soundgen.pittbull.soundgen.Wave16 object
-     */
-    public Wave16 setName(String n)
-    {
-        return this;
     }
 
     /**

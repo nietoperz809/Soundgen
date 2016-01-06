@@ -19,29 +19,24 @@ public class Wave16
     /**
      * Sampling rate
      */
-    public int samplingRate;
-
-    /**
-     * Optional name of this wave
-     */
-    public String name = "unnamed";
+    private final int samplingRate;
 
     /**
      * Upper level constant
      */
-    public static final double MAX_VALUE = Short.MAX_VALUE;
+    private static final double MAX_VALUE = Short.MAX_VALUE;
 
     /**
      * Lower level constant
      */
-    public static final double MIN_VALUE = Short.MIN_VALUE;
+    private static final double MIN_VALUE = Short.MIN_VALUE;
 
     /**
      * Math constants
      */
-    public static final double PI = Math.PI;
-    public static final double PI2 = 2.0 * PI;
-    public static final double ASIN1 = Math.asin(1.0);
+    private static final double PI = Math.PI;
+    private static final double PI2 = 2.0 * PI;
+    private static final double ASIN1 = Math.asin(1.0);
 
     /**
      * Builds a new com.soundgen.pittbull.soundgen.Wave16 object
@@ -49,7 +44,7 @@ public class Wave16
      * @param size Size of array
      * @param rate Sampling rate
      */
-    public Wave16(int size, int rate)
+    private Wave16(int size, int rate)
     {
         data = new double[size];
         samplingRate = rate;
@@ -62,7 +57,7 @@ public class Wave16
      *
      * @return The new object
      */
-    public Wave16 createEmptyCopy()
+    private Wave16 createEmptyCopy()
     {
         return new Wave16(data.length, samplingRate);
         //out.setName(Thread.currentThread().getStackTrace()[2].getMethodName());
@@ -76,7 +71,6 @@ public class Wave16
      */
     public Wave16 setName(String n)
     {
-        name = n;
         return this;
     }
 
@@ -106,7 +100,7 @@ public class Wave16
         return "not supported";
     }
 
-    public static double[] fitValues(double[] in)
+    private static double[] fitValues(double[] in)
     {
         double[] out = new double[in.length];
         Wave16.Wave16AmplitudeInfo am = new Wave16.Wave16AmplitudeInfo();
@@ -124,7 +118,7 @@ public class Wave16
         return out;
     }
 
-    public Wave16 deriveAndFitValues()
+    private Wave16 deriveAndFitValues()
     {
         double f1;
         double f2;

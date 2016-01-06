@@ -1,7 +1,7 @@
 package com.soundgen.pittbull.soundgen;
 
 /**
- * Created by Administrator on 1/6/2016.
+ *
  */
 import android.media.AudioFormat;
 import android.media.AudioManager;
@@ -38,6 +38,7 @@ public class MyAudioTrack extends Thread
         }
         catch (InterruptedException e)
         {
+            MyApp.Msg("disposal fail");
         }
         my.stop();
     }

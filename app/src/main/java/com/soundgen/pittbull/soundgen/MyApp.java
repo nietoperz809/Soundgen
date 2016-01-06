@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 public class MyApp extends Application
 {
+    public static final String tagStr = "hello: ";
     public static MyApp app;
     public static ArrayList<SynthPanel> panels = new ArrayList<SynthPanel>();
 
@@ -29,7 +30,12 @@ public class MyApp extends Application
 
     public static void Msg (String msg)
     {
-        System.out.println("hello: " + msg);
+        System.out.println(tagStr + msg);
+    }
+
+    public static void Err (String msg)
+    {
+        System.err.println(tagStr + msg);
     }
 }
 

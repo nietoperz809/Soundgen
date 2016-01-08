@@ -17,7 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-public class MainActivity extends /*AppCompat*/Activity
+public class MainActivity extends Activity
 {
     /**
      * Sets this App to Fullscreen Landscape
@@ -47,9 +47,6 @@ public class MainActivity extends /*AppCompat*/Activity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        //MenuInflater inflater = getMenuInflater();
-        //inflater.inflate(R.menu.game_menu, menu);
-        //MyApp.kill();
         menu.add(Menu.NONE, 1, Menu.NONE, "");
         MenuItem m = menu.findItem(1);
         //Spanned text = Html.fromHtml("<b><u><font color='#ff3824'>Kill App</font>");
@@ -60,7 +57,6 @@ public class MainActivity extends /*AppCompat*/Activity
         text.setSpan(new ForegroundColorSpan(Color.CYAN), 0, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         m.setTitle (text);
-        //m.setIcon(R.mipmap.ic_launcher);
         return true;
     }
 
@@ -77,7 +73,16 @@ public class MainActivity extends /*AppCompat*/Activity
         }
     }
 
-    synchronized void create()
+    /**
+     * Back button disabled
+     */
+    @Override
+    public void onBackPressed()
+    {
+    }
+
+
+    private synchronized void create()
     {
         int pos = 0;
         RelativeLayout relview = (RelativeLayout) findViewById(R.id.dialog);
@@ -88,7 +93,7 @@ public class MainActivity extends /*AppCompat*/Activity
         }
     }
 
-    synchronized void dispose()
+    private synchronized void dispose()
     {
         for (SynthPanel s : MyApp.panels)
         {

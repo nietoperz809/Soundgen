@@ -52,7 +52,7 @@ public class MainActivity extends Activity
         //Spanned text = Html.fromHtml("<b><u><font color='#ff3824'>Kill App</font>");
 
         SpannableStringBuilder text = new SpannableStringBuilder();
-        text.append("test 1234");
+        text.append(" Exit ");
         text.setSpan(new BackgroundColorSpan(Color.BLACK), 0, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         text.setSpan(new ForegroundColorSpan(Color.CYAN), 0, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 

@@ -157,11 +157,28 @@ public class Wave16
         return out;
     }
 
+    static public Wave16 sweepSine(int samplingrate,
+                                   int fstart,
+                                   int fend,
+                                   int samples, int startval)
+    {
+        Wave16 out = new Wave16(samples, samplingrate);
+        //double d1 = PI2 / samplingrate * freq;
+        double step = Math.abs(((double) fend - (double) fstart) / samples / Wave16.PI);
+        double fact = fstart < fend ? fstart : fend;
+        for (int x = 0; x < samples; x++)
+        {
+            out.data[x] = MAX_VALUE * Math.sin(PI2 * fact * ((double) x / samplingrate));
+            fact += step;
+        }
+        return out;
+    }
+
     static public Wave16 curveTriangle(int samplingrate, int samples, double freq, int startval)
     {
         Wave16 out = new Wave16(samples, samplingrate);
 
-        double d1 = 2 * PI / samplingrate * freq;
+        double d1 = PI2 / samplingrate * freq;
         for (int x = 0; x < samples; x++)
         {
             out.data[x] = MAX_VALUE * Math.asin(Math.sin(startval * d1)) / ASIN1;

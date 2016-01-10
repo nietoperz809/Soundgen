@@ -23,6 +23,7 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
     DigiView freqView;
     Spinner scaleSelect;
     Spinner waveFormSelect;
+    Spinner sweepSelect;
     SeekBar freqSlider;
     MyAudioTrack audioTrack;
 
@@ -44,10 +45,6 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         params.topMargin = 10;
         freqView = new DigiView(context, 5);
         freqView.setBackgroundColor(Color.BLACK);
-        //freqView.setTextColor(Color.GREEN);
-        //freqView.setTextSize(28);
-        //freqView.setGravity(Gravity.CENTER);
-        //freqView.setText("0");
         this.addView(freqView, params);
         // Scale switcher
         List strings = Arrays.asList(new String[]{"100", "200", "500", "1000", "2000", "5000", "10000"});
@@ -73,6 +70,18 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         waveFormSelect.setAdapter(dataAdapter);
         waveFormSelect.setOnItemSelectedListener(this);
         this.addView(waveFormSelect, params);
+        // Sweep switcher
+        strings = Arrays.asList(new String[]{"OFF", "0-100", "0-200", "0-500", "0-1000", "0-2000", "0-5000", "0-10000"});
+        params = new RelativeLayout.LayoutParams(240, 80);
+        params.leftMargin = 750;
+        params.topMargin = 10;
+        sweepSelect = new Spinner(context);
+        sweepSelect.setBackgroundColor(Color.GRAY);
+        dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, strings);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sweepSelect.setAdapter(dataAdapter);
+        sweepSelect.setOnItemSelectedListener(this);
+        this.addView(sweepSelect, params);
         // SeekBar
         params = new RelativeLayout.LayoutParams(dm.widthPixels - 15, 100);
         params.leftMargin = 5;

@@ -15,7 +15,7 @@ public class MyAudioTrack extends Thread
     final int chunksize = 10000;
     SeekBar _seek;
     boolean running = true;
-    public enum WaveForm {OFF, SINE, SAWTOOTH, SQUARE, TRIANGLE, PULSE};
+    public enum WaveForm {OFF, SINE, SAWTOOTH, SQUARE, TRIANGLE, PULSE, SWEEPSINE};
     WaveForm currentWaveForm = WaveForm.OFF;
 
     public MyAudioTrack (SeekBar seek)
@@ -99,6 +99,11 @@ public class MyAudioTrack extends Thread
 
                 case TRIANGLE:
                     wv = Wave16.curveTriangle (_samplerate, chunksize, freq, startval);
+                    break;
+
+                case SWEEPSINE:
+                    // TODO: add sweepsine code
+                    wv = null;
                     break;
             }
             startval += chunksize;

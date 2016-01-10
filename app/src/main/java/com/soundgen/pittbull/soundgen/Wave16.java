@@ -136,7 +136,8 @@ public class Wave16
         //double d2 = samplingrate/freq;
         for (int x = 0; x < samples; x++)
         {
-            out.data[x] = MAX_VALUE * Math.asin(Math.sin(startval * d1)) / ASIN1 * Math.pow(-1, Math.floor(0.5 + startval / ((double) samplingrate / freq)));
+            out.data[x] = MAX_VALUE * Math.asin(Math.sin(startval * d1)) / ASIN1 * Math.pow(-1,
+                    Math.floor(0.5 + startval / ((double) samplingrate / freq)));
             startval++;
         }
         out.data = fitValues(out.data);
@@ -157,18 +158,22 @@ public class Wave16
         return out;
     }
 
-    static public Wave16 sweepSine(int samplingrate,
-                                   int fstart,
-                                   int fend,
-                                   int samples, int startval)
+
+    static public Wave16 sweepSine(int samplingrate, int fstart, int fend, double seconds)
+    {
+        double time = seconds * samplingrate;
+        return sweepSine(samplingrate, fstart, fend, (int) time);
+    }
+
+    static public Wave16 sweepSine(int samplingrate, int fstart, int fend, int samples)
     {
         Wave16 out = new Wave16(samples, samplingrate);
-        //double d1 = PI2 / samplingrate * freq;
         double step = Math.abs(((double) fend - (double) fstart) / samples / Wave16.PI);
         double fact = fstart < fend ? fstart : fend;
         for (int x = 0; x < samples; x++)
         {
-            out.data[x] = MAX_VALUE * Math.sin(PI2 * fact * ((double) x / samplingrate));
+            out.data[x] =
+                    Wave16.MAX_VALUE * Math.sin(2 * Wave16.PI * fact * ((double) x / samplingrate));
             fact += step;
         }
         return out;

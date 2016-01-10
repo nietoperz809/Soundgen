@@ -23,8 +23,8 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
     DigiView freqView;
     Spinner scaleSelect;
     Spinner waveFormSelect;
-    Spinner sweepSelect;
     SeekBar freqSlider;
+    SeekBar freqSlider2;
     MyAudioTrack audioTrack;
 
     public SynthPanel(RelativeLayout parent, int posy, Context context)
@@ -65,30 +65,26 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         params.topMargin = 10;
         waveFormSelect = new Spinner(context);
         waveFormSelect.setBackgroundColor(Color.GRAY);
-        dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, strings);
+        dataAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, strings);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         waveFormSelect.setAdapter(dataAdapter);
         waveFormSelect.setOnItemSelectedListener(this);
         this.addView(waveFormSelect, params);
-        // Sweep switcher
-        strings = Arrays.asList(new String[]{"OFF", "0-100", "0-200", "0-500", "0-1000", "0-2000", "0-5000", "0-10000"});
-        params = new RelativeLayout.LayoutParams(240, 80);
-        params.leftMargin = 750;
-        params.topMargin = 10;
-        sweepSelect = new Spinner(context);
-        sweepSelect.setBackgroundColor(Color.GRAY);
-        dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, strings);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sweepSelect.setAdapter(dataAdapter);
-        sweepSelect.setOnItemSelectedListener(this);
-        this.addView(sweepSelect, params);
         // SeekBar
         params = new RelativeLayout.LayoutParams(dm.widthPixels - 15, 100);
         params.leftMargin = 5;
-        params.topMargin = 100;
+        params.topMargin = 90;
         freqSlider = new SeekBar(context);
         freqSlider.setOnSeekBarChangeListener(this);
         this.addView(freqSlider, params);
+        // SeekBar2
+        params = new RelativeLayout.LayoutParams(dm.widthPixels - 15, 100);
+        params.leftMargin = 5;
+        params.topMargin = 160;
+        freqSlider2 = new SeekBar(context);
+        freqSlider2.setOnSeekBarChangeListener(this);
+        this.addView(freqSlider2, params);
+
         // The track
         audioTrack = new MyAudioTrack(freqSlider);
     }

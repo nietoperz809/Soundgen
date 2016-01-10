@@ -15,7 +15,8 @@ public class MyAudioTrack extends Thread
     final int chunksize = 10000;
     SeekBar _seek;
     boolean running = true;
-    public enum WaveForm {OFF, SINE, SAWTOOTH, SQUARE, TRIANGLE, PULSE, SWEEPSINE};
+    public enum WaveForm {OFF, Sine, Sawtooth, Square, Triangle, Pulse,
+        SweepSIN, SweepSAW, SweepSQR, SweepTRI, SweepPUL};
     WaveForm currentWaveForm = WaveForm.OFF;
 
     public MyAudioTrack (SeekBar seek)
@@ -59,6 +60,8 @@ public class MyAudioTrack extends Thread
         Wave16 wv;
         int startval = 0;
 
+        Wave16 sweep = Wave16.sweepSine(_samplerate, 0, 5000, 10d);
+
         while(running)
         {
             int freq = _seek.getProgress();
@@ -81,27 +84,28 @@ public class MyAudioTrack extends Thread
                     wv = null;
                     break;
 
-                case SAWTOOTH:
+                case Sawtooth:
                     wv = Wave16.curveSawTooth (_samplerate, chunksize, freq, startval);
                     break;
 
-                case SINE:
+                case Sine:
                     wv = Wave16.curveSine (_samplerate, chunksize, freq, startval);
+                    //wv=sweep; // TODO: Experimental
                     break;
 
-                case SQUARE:
+                case Square:
                     wv = Wave16.curveRect (_samplerate, chunksize, freq, startval);
                     break;
 
-                case PULSE:
+                case Pulse:
                     wv = Wave16.curvePulse (_samplerate, chunksize, freq, startval);
                     break;
 
-                case TRIANGLE:
+                case Triangle:
                     wv = Wave16.curveTriangle (_samplerate, chunksize, freq, startval);
                     break;
 
-                case SWEEPSINE:
+                case SweepSIN:
                     // TODO: add sweepsine code
                     wv = null;
                     break;

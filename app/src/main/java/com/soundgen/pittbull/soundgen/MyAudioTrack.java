@@ -106,8 +106,11 @@ public class MyAudioTrack extends Thread
                     break;
 
                 case SweepSIN:
-                    // TODO: add sweepsine code
-                    wv = null;
+                    int from = startval % sweep.data.length;
+                    int to = from + chunksize;
+                    if (to >= sweep.data.length)
+                        to = sweep.data.length-1;
+                    wv = Wave16.extractSamples (sweep, from, to);
                     break;
             }
             startval += chunksize;

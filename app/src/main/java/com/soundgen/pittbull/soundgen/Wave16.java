@@ -47,6 +47,15 @@ public class Wave16
         //name = Thread.currentThread().getStackTrace()[2].getMethodName();
     }
 
+    public static Wave16 extractSamples (Wave16 source, int from, int to)
+    {
+        int len = to - from;
+        Wave16 res = new Wave16(len, source.samplingRate);
+        System.arraycopy (source.data, from, res.data, 0, len);
+        return res;
+    }
+
+
     /**
      * Local factory function that builds a new SamplingData16 object from this one
      * All samples are empty
@@ -158,25 +167,29 @@ public class Wave16
         return out;
     }
 
-
-    static public Wave16 sweepSine(int samplingrate, int fstart, int fend, double seconds)
-    {
-        double time = seconds * samplingrate;
-        return sweepSine(samplingrate, fstart, fend, (int) time);
-    }
-
-    static public Wave16 sweepSine(int samplingrate, int fstart, int fend, int samples)
+    static public Wave16 sweepSine(int samplingrate,
+                                   int fstart,
+                                   int fend,
+                                   int samples)
     {
         Wave16 out = new Wave16(samples, samplingrate);
         double step = Math.abs(((double) fend - (double) fstart) / samples / Wave16.PI);
         double fact = fstart < fend ? fstart : fend;
         for (int x = 0; x < samples; x++)
         {
-            out.data[x] =
-                    Wave16.MAX_VALUE * Math.sin(2 * Wave16.PI * fact * ((double) x / samplingrate));
+            out.data[x] = Wave16.MAX_VALUE * Math.sin(2 * Wave16.PI * fact * ((double) x / samplingrate));
             fact += step;
         }
         return out;
+    }
+
+    static public Wave16 sweepSine(int samplingrate,
+                                   int fstart,
+                                   int fend,
+                                   double seconds)
+    {
+        double time = seconds * samplingrate;
+        return sweepSine(samplingrate, fstart, fend, (int)time);
     }
 
     static public Wave16 curveTriangle(int samplingrate, int samples, double freq, int startval)

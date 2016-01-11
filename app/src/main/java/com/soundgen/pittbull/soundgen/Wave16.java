@@ -180,13 +180,12 @@ public class Wave16
                                    int samples)
     {
         Wave16 out = new Wave16(samples, samplingrate, WaveForm.SweepSIN);
-        double step = Math.abs(((double) fend - (double) fstart) / samples / Wave16.PI);
-        double fact = fstart < fend ? fstart : fend;
+        double step = (((double) fend - (double) fstart) / samples / Wave16.PI);
         for (int x = 0; x < samples; x++)
         {
             out.data[x] = Wave16.MAX_VALUE * Math.sin(
-                    2 * Wave16.PI * fact * ((double) x / samplingrate));
-            fact += step;
+                    2 * Wave16.PI * fstart * ((double) x / samplingrate));
+            fstart += step;
         }
         return out;
     }
@@ -206,13 +205,12 @@ public class Wave16
                                        int samples)
     {
         Wave16 out = new Wave16(samples, samplingrate, WaveForm.SweepTRI);
-        double step = Math.abs(((double) fend - (double) fstart) / samples / Wave16.PI);
-        double fact = fstart < fend ? fstart : fend;
+        double step = ((double) fend - (double) fstart) / samples / Wave16.PI;
         for (int x = 0; x < samples; x++)
         {
-            double c1 = Math.sin(2 * Wave16.PI * fact * ((double) x / samplingrate));
+            double c1 = Math.sin(2 * Wave16.PI * fstart * ((double) x / samplingrate));
             out.data[x] = Wave16.MAX_VALUE * Math.asin(c1) / Math.asin(1);
-            fact += step;
+            fstart += step;
         }
         return out;
     }
@@ -232,12 +230,11 @@ public class Wave16
                                      int samples)
     {
         Wave16 out = new Wave16(samples, samplingrate, WaveForm.SweepSQR);
-        double step = Math.abs(((double) fend - (double) fstart) / samples / Wave16.PI);
-        double fact = fstart < fend ? fstart : fend;
+        double step = (((double) fend - (double) fstart) / samples / Wave16.PI);
         for (int x = 0; x < samples; x++)
         {
-            out.data[x] = Wave16.MAX_VALUE * Math.signum(Math.sin(2 * Wave16.PI * fact * ((double) x / samplingrate)));
-            fact += step;
+            out.data[x] = Wave16.MAX_VALUE * Math.signum(Math.sin(2 * Wave16.PI * fstart * ((double) x / samplingrate)));
+            fstart += step;
         }
         return out;
     }

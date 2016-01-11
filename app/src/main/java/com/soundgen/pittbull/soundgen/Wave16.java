@@ -174,18 +174,19 @@ public class Wave16
         return out;
     }
 
-    static public Wave16 sweepSine(int samplingrate,
+    static private Wave16 sweepSine(int samplingrate,
                                    int fstart,
                                    int fend,
                                    int samples)
     {
         Wave16 out = new Wave16(samples, samplingrate, WaveForm.SweepSIN);
         double step = (((double) fend - (double) fstart) / samples / Wave16.PI);
+        double fact = fstart < fend ? fstart : fend;
         for (int x = 0; x < samples; x++)
         {
             out.data[x] = Wave16.MAX_VALUE * Math.sin(
-                    2 * Wave16.PI * fstart * ((double) x / samplingrate));
-            fstart += step;
+                    2 * Wave16.PI * fact * ((double) x / samplingrate));
+            fact += step;
         }
         return out;
     }
@@ -199,18 +200,19 @@ public class Wave16
         return sweepSine(samplingrate, fstart, fend, (int)time);
     }
 
-    static public Wave16 sweepTriangle(int samplingrate,
+    static private Wave16 sweepTriangle(int samplingrate,
                                        int fstart,
                                        int fend,
                                        int samples)
     {
         Wave16 out = new Wave16(samples, samplingrate, WaveForm.SweepTRI);
         double step = ((double) fend - (double) fstart) / samples / Wave16.PI;
+        double fact = fstart < fend ? fstart : fend;
         for (int x = 0; x < samples; x++)
         {
-            double c1 = Math.sin(2 * Wave16.PI * fstart * ((double) x / samplingrate));
+            double c1 = Math.sin(2 * Wave16.PI * fact * ((double) x / samplingrate));
             out.data[x] = Wave16.MAX_VALUE * Math.asin(c1) / Math.asin(1);
-            fstart += step;
+            fact += step;
         }
         return out;
     }
@@ -224,17 +226,18 @@ public class Wave16
         return sweepTriangle(samplingrate, fstart, fend, (int) time);
     }
 
-    static public Wave16 sweepSquare(int samplingrate,
+    static private Wave16 sweepSquare(int samplingrate,
                                      int fstart,
                                      int fend,
                                      int samples)
     {
         Wave16 out = new Wave16(samples, samplingrate, WaveForm.SweepSQR);
         double step = (((double) fend - (double) fstart) / samples / Wave16.PI);
+        double fact = fstart < fend ? fstart : fend;
         for (int x = 0; x < samples; x++)
         {
-            out.data[x] = Wave16.MAX_VALUE * Math.signum(Math.sin(2 * Wave16.PI * fstart * ((double) x / samplingrate)));
-            fstart += step;
+            out.data[x] = Wave16.MAX_VALUE * Math.signum(Math.sin(2 * Wave16.PI * fact * ((double) x / samplingrate)));
+            fact += step;
         }
         return out;
     }
@@ -248,7 +251,7 @@ public class Wave16
         return sweepSquare(samplingrate, fstart, fend, (int) time);
     }
 
-    static public Wave16 sweepPulse(int samplingrate,
+    static private Wave16 sweepPulse(int samplingrate,
                                     int fstart,
                                     int fend,
                                     int samples)

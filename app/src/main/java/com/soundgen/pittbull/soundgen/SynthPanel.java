@@ -26,6 +26,7 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
     Spinner waveFormSelect;
     SeekBar freqSlider;
     SeekBar freqSlider2;
+    SeekBar sweepInterval;
     MyAudioTrack audioTrack;
 
     public SynthPanel(RelativeLayout parent, int posy, Context context)
@@ -34,12 +35,14 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         if (wm == null)
             wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(dm);
+
         // Position main panel
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(dm.widthPixels - 2, 250);
         params.leftMargin = 1;
         params.topMargin = posy;
         parent.addView(this, params);
         this.setBackgroundColor(Color.YELLOW);
+
         // Frequency View
         params = new RelativeLayout.LayoutParams(160, 80);
         params.leftMargin = 10;
@@ -47,6 +50,7 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         freqView = new DigiView(context, 5);
         freqView.setBackgroundColor(Color.BLACK);
         this.addView(freqView, params);
+
         // Frequency View
         params = new RelativeLayout.LayoutParams(160, 80);
         params.leftMargin = 200;
@@ -58,19 +62,20 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         // Scale switcher
         List strings = Arrays.asList(new String[]{"100", "200", "500", "1000", "2000", "5000", "10000"});
         params = new RelativeLayout.LayoutParams(240, 80);
-        params.leftMargin = 720;
+        params.leftMargin = 420;
         params.topMargin = 10;
         scaleSelect = new Spinner(context);
         scaleSelect.setBackgroundColor(Color.GRAY);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, strings);
+        ArrayAdapter<String> dataAdapter =  new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, strings);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         scaleSelect.setAdapter(dataAdapter);
         scaleSelect.setOnItemSelectedListener(this);
         this.addView(scaleSelect, params);
+
         // Waveform switcher
         strings = Arrays.asList(WaveForm.values());
         params = new RelativeLayout.LayoutParams(240, 80);
-        params.leftMargin = 970;
+        params.leftMargin = 670;
         params.topMargin = 10;
         waveFormSelect = new Spinner(context);
         waveFormSelect.setBackgroundColor(Color.GRAY);
@@ -79,6 +84,15 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         waveFormSelect.setAdapter(dataAdapter);
         waveFormSelect.setOnItemSelectedListener(this);
         this.addView(waveFormSelect, params);
+
+        // Sweep interval
+        params = new RelativeLayout.LayoutParams(1000, 100); // width, height
+        params.leftMargin = 900;
+        params.topMargin = 10;
+        sweepInterval = new SeekBar(context);
+        sweepInterval.setMax(100);
+        this.addView(sweepInterval, params);
+
         // SeekBar
         params = new RelativeLayout.LayoutParams(dm.widthPixels - 15, 100);
         params.leftMargin = 5;
@@ -86,6 +100,7 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         freqSlider = new SeekBar(context);
         freqSlider.setOnSeekBarChangeListener(this);
         this.addView(freqSlider, params);
+
         // SeekBar2
         params = new RelativeLayout.LayoutParams(dm.widthPixels - 15, 100);
         params.leftMargin = 5;
@@ -95,7 +110,7 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         this.addView(freqSlider2, params);
 
         // The track
-        audioTrack = new MyAudioTrack (freqSlider, freqSlider2);
+        audioTrack = new MyAudioTrack (freqSlider, freqSlider2, sweepInterval);
     }
 
     public void dispose()
@@ -137,6 +152,10 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         {
             freqView2.setNumber(progress);
         }
+//        else if (seekBar.equals(sweepInterval))
+//        {
+//            sweepTime =
+//        }
     }
 
 

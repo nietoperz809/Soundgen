@@ -11,30 +11,71 @@ import android.widget.SeekBar;
 
 public class MyAudioTrack extends Thread
 {
+    /**
+     * The player oject
+     */
     AudioTrack my;
+    /**
+     * fixed sample rate
+     */
     final int _samplerate = 44000;
+    /**
+     * fixed buffer size
+     */
     final int chunksize = 10000;
+    /**
+     * scrollbar for single or first sweep frequency
+     */
     SeekBar _seek;
+
+    SeekBar _seekSweep;
+    /**
+     * scrollbar for second sweep frequency
+     */
     SeekBar _seek2;
+    /**
+     * Thread running flag
+     */
     boolean running = true;
+    /**
+     * Sweep object
+     */
     Wave16 _sweep = new Wave16(0, 0);
+    /**
+     * current first sweep frequency
+     */
     int sweepmin;
+    /**
+     * current second sweep frequency
+     */
     int sweepmax;
 
+    int sweeptime;
+    /**
+     * current Waveform
+     */
     WaveForm currentWaveForm = WaveForm.OFF;
 
-    public MyAudioTrack(SeekBar seek, SeekBar seek2)
+    public MyAudioTrack(SeekBar seek, SeekBar seek2, SeekBar sweeptime)
     {
         _seek = seek;
         _seek2 = seek2;
+        _seekSweep = sweeptime;
         this.start();
     }
 
+    /**
+     * Setter for Waveform
+     * @param i
+     */
     synchronized public void setWaveForm(WaveForm i)
     {
         currentWaveForm = i;
     }
 
+    /**
+     * End this thread
+     */
     synchronized public void dispose()
     {
         running = false;
@@ -49,20 +90,31 @@ public class MyAudioTrack extends Thread
         my.stop();
     }
 
-    private Wave16 makeSweep(WaveForm swptype, int startval, int min, int max)
+    /**
+     * Make new sweep or get a sweep chunk
+     * @param swptype the sweep type
+     * @param startval start offset of next chunk
+     * @param min sweep freq 1
+     * @param max sweep freq 2
+     * @return sweep chunk or NULL
+     */
+    private Wave16 makeSweep(WaveForm swptype, int startval, int min, int max, int time)
     {
-        if (_sweep.waveType != swptype || min != sweepmin || max != sweepmax)
+        if (_sweep.waveType != swptype || min != sweepmin || max != sweepmax || time != sweeptime)
         {
+            double tl = ((double)time)/10+0.1;
+            //MyApp.Msg(""+tl+":"+min+":"+max);
             if (swptype == WaveForm.SweepSIN)
-                _sweep = Wave16.sweepSine(_samplerate, sweepmin, sweepmax, 10d);
+                _sweep = Wave16.sweepSine(_samplerate, sweepmin, sweepmax, tl);
             else if (swptype == WaveForm.SweepTRI)
-                _sweep = Wave16.sweepTriangle(_samplerate, sweepmin, sweepmax, 10d);
+                _sweep = Wave16.sweepTriangle(_samplerate, sweepmin, sweepmax, tl);
             else if (swptype == WaveForm.SweepSQR)
-                _sweep = Wave16.sweepSquare(_samplerate, sweepmin, sweepmax, 10d);
+                _sweep = Wave16.sweepSquare(_samplerate, sweepmin, sweepmax, tl);
             else if (swptype == WaveForm.SweepPUL)
-                _sweep = Wave16.sweepPulse(_samplerate, sweepmin, sweepmax, 10d);
+                _sweep = Wave16.sweepPulse(_samplerate, sweepmin, sweepmax, tl);
             sweepmin = min;
             sweepmax = max;
+            sweeptime = time;
         }
         else
         {
@@ -75,10 +127,13 @@ public class MyAudioTrack extends Thread
         return null;
     }
 
+    /**
+     * Thread function to run the generator
+     */
     @Override
     public void run()
     {
-        //this.setPriority(MAX_PRIORITY);
+        // Init audio track and run
         my = new AudioTrack(AudioManager.STREAM_MUSIC, _samplerate, AudioFormat.CHANNEL_OUT_MONO,
                 AudioFormat.ENCODING_PCM_16BIT, 4 * chunksize, AudioTrack.MODE_STREAM);
         my.play();
@@ -86,8 +141,10 @@ public class MyAudioTrack extends Thread
         Wave16 wv = null;
         int startval = 0;
 
+        // run in a loop
         while (running)
         {
+            // if Wave is OFF just give away CPU cycles
             if (currentWaveForm == WaveForm.OFF)
             {
                 try
@@ -103,6 +160,7 @@ public class MyAudioTrack extends Thread
 
             int freq = _seek.getProgress();
             int freq2 = _seek2.getProgress();
+            int sweeptim = _seekSweep.getProgress();
 
             switch (currentWaveForm)
             {
@@ -131,12 +189,13 @@ public class MyAudioTrack extends Thread
                 case SweepSQR:
                 case SweepPUL:
                     //case SweepSAW:
-                    wv = makeSweep(currentWaveForm, startval, freq, freq2);
+                    wv = makeSweep(currentWaveForm, startval, freq, freq2, sweeptim);
                     break;
 
             }
-            startval += chunksize;
+            startval += chunksize; // set new chunk offset
 
+            // submit sampling data to player
             if (wv != null)
             {
                 my.write(wv.toShortArray(), 0, wv.data.length);

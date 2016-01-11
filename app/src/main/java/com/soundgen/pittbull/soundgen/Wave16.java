@@ -8,6 +8,8 @@ package com.soundgen.pittbull.soundgen; /**
 public class Wave16
 {
 
+    public WaveForm waveType = WaveForm.OFF;
+
     /**
      * Data array that holds sampling data
      */
@@ -40,11 +42,16 @@ public class Wave16
      * @param size Size of array
      * @param rate Sampling rate
      */
-    private Wave16(int size, int rate)
+    public Wave16(int size, int rate)
     {
         data = new double[size];
         samplingRate = rate;
-        //name = Thread.currentThread().getStackTrace()[2].getMethodName();
+    }
+
+    private Wave16 (int size, int rate, WaveForm t)
+    {
+        this (size, rate);
+        waveType = t;
     }
 
     public static Wave16 extractSamples (Wave16 source, int from, int to)
@@ -172,12 +179,13 @@ public class Wave16
                                    int fend,
                                    int samples)
     {
-        Wave16 out = new Wave16(samples, samplingrate);
+        Wave16 out = new Wave16(samples, samplingrate, WaveForm.SweepSIN);
         double step = Math.abs(((double) fend - (double) fstart) / samples / Wave16.PI);
         double fact = fstart < fend ? fstart : fend;
         for (int x = 0; x < samples; x++)
         {
-            out.data[x] = Wave16.MAX_VALUE * Math.sin(2 * Wave16.PI * fact * ((double) x / samplingrate));
+            out.data[x] = Wave16.MAX_VALUE * Math.sin(
+                    2 * Wave16.PI * fact * ((double) x / samplingrate));
             fact += step;
         }
         return out;
@@ -190,6 +198,76 @@ public class Wave16
     {
         double time = seconds * samplingrate;
         return sweepSine(samplingrate, fstart, fend, (int)time);
+    }
+
+    static public Wave16 sweepTriangle(int samplingrate,
+                                       int fstart,
+                                       int fend,
+                                       int samples)
+    {
+        Wave16 out = new Wave16(samples, samplingrate, WaveForm.SweepTRI);
+        double step = Math.abs(((double) fend - (double) fstart) / samples / Wave16.PI);
+        double fact = fstart < fend ? fstart : fend;
+        for (int x = 0; x < samples; x++)
+        {
+            double c1 = Math.sin(2 * Wave16.PI * fact * ((double) x / samplingrate));
+            out.data[x] = Wave16.MAX_VALUE * Math.asin(c1) / Math.asin(1);
+            fact += step;
+        }
+        return out;
+    }
+
+    static public Wave16 sweepTriangle (int samplingrate,
+                                   int fstart,
+                                   int fend,
+                                   double seconds)
+    {
+        double time = seconds * samplingrate;
+        return sweepTriangle(samplingrate, fstart, fend, (int) time);
+    }
+
+    static public Wave16 sweepSquare(int samplingrate,
+                                     int fstart,
+                                     int fend,
+                                     int samples)
+    {
+        Wave16 out = new Wave16(samples, samplingrate, WaveForm.SweepSQR);
+        double step = Math.abs(((double) fend - (double) fstart) / samples / Wave16.PI);
+        double fact = fstart < fend ? fstart : fend;
+        for (int x = 0; x < samples; x++)
+        {
+            out.data[x] = Wave16.MAX_VALUE * Math.signum(Math.sin(2 * Wave16.PI * fact * ((double) x / samplingrate)));
+            fact += step;
+        }
+        return out;
+    }
+
+    static public Wave16 sweepSquare (int samplingrate,
+                                        int fstart,
+                                        int fend,
+                                        double seconds)
+    {
+        double time = seconds * samplingrate;
+        return sweepSquare(samplingrate, fstart, fend, (int) time);
+    }
+
+    static public Wave16 sweepPulse(int samplingrate,
+                                    int fstart,
+                                    int fend,
+                                    int samples)
+    {
+        Wave16 wv = sweepSquare(samplingrate, fstart, fend, samples).deriveAndFitValues();
+        wv.waveType = WaveForm.SweepPUL;
+        return wv;
+    }
+
+    static public Wave16 sweepPulse (int samplingrate,
+                                      int fstart,
+                                      int fend,
+                                      double seconds)
+    {
+        double time = seconds * samplingrate;
+        return sweepPulse(samplingrate, fstart, fend, (int) time);
     }
 
     static public Wave16 curveTriangle(int samplingrate, int samples, double freq, int startval)

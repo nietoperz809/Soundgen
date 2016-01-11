@@ -21,6 +21,7 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
     static WindowManager wm;
     static final DisplayMetrics dm = new DisplayMetrics();
     DigiView freqView;
+    DigiView freqView2;
     Spinner scaleSelect;
     Spinner waveFormSelect;
     SeekBar freqSlider;
@@ -46,10 +47,18 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         freqView = new DigiView(context, 5);
         freqView.setBackgroundColor(Color.BLACK);
         this.addView(freqView, params);
+        // Frequency View
+        params = new RelativeLayout.LayoutParams(160, 80);
+        params.leftMargin = 200;
+        params.topMargin = 10;
+        freqView2 = new DigiView(context, 5);
+        freqView2.setBackgroundColor(Color.BLACK);
+        this.addView(freqView2, params);
+
         // Scale switcher
         List strings = Arrays.asList(new String[]{"100", "200", "500", "1000", "2000", "5000", "10000"});
         params = new RelativeLayout.LayoutParams(240, 80);
-        params.leftMargin = 220;
+        params.leftMargin = 720;
         params.topMargin = 10;
         scaleSelect = new Spinner(context);
         scaleSelect.setBackgroundColor(Color.GRAY);
@@ -59,9 +68,9 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         scaleSelect.setOnItemSelectedListener(this);
         this.addView(scaleSelect, params);
         // Waveform switcher
-        strings = Arrays.asList(MyAudioTrack.WaveForm.values());
+        strings = Arrays.asList(WaveForm.values());
         params = new RelativeLayout.LayoutParams(240, 80);
-        params.leftMargin = 470;
+        params.leftMargin = 970;
         params.topMargin = 10;
         waveFormSelect = new Spinner(context);
         waveFormSelect.setBackgroundColor(Color.GRAY);
@@ -86,7 +95,7 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         this.addView(freqSlider2, params);
 
         // The track
-        audioTrack = new MyAudioTrack(freqSlider);
+        audioTrack = new MyAudioTrack (freqSlider, freqSlider2);
     }
 
     public void dispose()
@@ -100,11 +109,13 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
     {
         if (parent.equals(waveFormSelect))
         {
-            audioTrack.setWaveForm(MyAudioTrack.WaveForm.values()[position]);
+            audioTrack.setWaveForm(WaveForm.values()[position]);
         }
         else if (parent.equals(scaleSelect))
         {
-            freqSlider.setMax(Integer.parseInt((String) ((TextView) view).getText()));
+            int max = Integer.parseInt((String) ((TextView) view).getText());
+            freqSlider.setMax(max);
+            freqSlider2.setMax(max);
         }
         ((TextView) view).setTextColor(Color.WHITE);
     }
@@ -121,6 +132,10 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         if (seekBar.equals(freqSlider))
         {
             freqView.setNumber(progress);
+        }
+        else if (seekBar.equals(freqSlider2))
+        {
+            freqView2.setNumber(progress);
         }
     }
 

@@ -3,6 +3,7 @@ package com.soundgen.pittbull.soundgen;
 /**
  *
  */
+
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
@@ -14,18 +15,22 @@ public class MyAudioTrack extends Thread
     final int _samplerate = 44000;
     final int chunksize = 10000;
     SeekBar _seek;
+    SeekBar _seek2;
     boolean running = true;
-    public enum WaveForm {OFF, Sine, Sawtooth, Square, Triangle, Pulse,
-        SweepSIN, SweepSAW, SweepSQR, SweepTRI, SweepPUL};
+    Wave16 _sweep = new Wave16(0, 0);
+    int sweepmin;
+    int sweepmax;
+
     WaveForm currentWaveForm = WaveForm.OFF;
 
-    public MyAudioTrack (SeekBar seek)
+    public MyAudioTrack(SeekBar seek, SeekBar seek2)
     {
         _seek = seek;
+        _seek2 = seek2;
         this.start();
     }
 
-    synchronized public void setWaveForm (WaveForm i)
+    synchronized public void setWaveForm(WaveForm i)
     {
         currentWaveForm = i;
     }
@@ -44,32 +49,50 @@ public class MyAudioTrack extends Thread
         my.stop();
     }
 
+    private Wave16 makeSweep(WaveForm swptype, int startval, int min, int max)
+    {
+        if (_sweep.waveType != swptype || min != sweepmin || max != sweepmax)
+        {
+            if (swptype == WaveForm.SweepSIN)
+                _sweep = Wave16.sweepSine(_samplerate, sweepmin, sweepmax, 10d);
+            else if (swptype == WaveForm.SweepTRI)
+                _sweep = Wave16.sweepTriangle(_samplerate, sweepmin, sweepmax, 10d);
+            else if (swptype == WaveForm.SweepSQR)
+                _sweep = Wave16.sweepSquare(_samplerate, sweepmin, sweepmax, 10d);
+            else if (swptype == WaveForm.SweepPUL)
+                _sweep = Wave16.sweepPulse(_samplerate, sweepmin, sweepmax, 10d);
+            sweepmin = min;
+            sweepmax = max;
+        }
+        else
+        {
+            int from = startval % _sweep.data.length;
+            int to = from + chunksize;
+            if (to >= _sweep.data.length)
+                to = _sweep.data.length - 1;
+            return Wave16.extractSamples(_sweep, from, to);
+        }
+        return null;
+    }
+
     @Override
     public void run()
     {
         //this.setPriority(MAX_PRIORITY);
-        my = new AudioTrack (AudioManager.STREAM_MUSIC,
-                _samplerate,
-                AudioFormat.CHANNEL_OUT_MONO,
-                AudioFormat.ENCODING_PCM_16BIT,
-                4*chunksize,
-                //AudioTrack.getMinBufferSize (_samplerate, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT),
-                AudioTrack.MODE_STREAM);
+        my = new AudioTrack(AudioManager.STREAM_MUSIC, _samplerate, AudioFormat.CHANNEL_OUT_MONO,
+                AudioFormat.ENCODING_PCM_16BIT, 4 * chunksize, AudioTrack.MODE_STREAM);
         my.play();
 
-        Wave16 wv;
+        Wave16 wv = null;
         int startval = 0;
 
-        Wave16 sweep = Wave16.sweepSine(_samplerate, 0, 5000, 10d);
-
-        while(running)
+        while (running)
         {
-            int freq = _seek.getProgress();
-            if (freq == 0)
+            if (currentWaveForm == WaveForm.OFF)
             {
                 try
                 {
-                    sleep (100);
+                    sleep(100);
                 }
                 catch (InterruptedException e)
                 {
@@ -77,41 +100,40 @@ public class MyAudioTrack extends Thread
                 }
                 continue;
             }
+
+            int freq = _seek.getProgress();
+            int freq2 = _seek2.getProgress();
+
             switch (currentWaveForm)
             {
-                default:
-                case OFF:
-                    wv = null;
-                    break;
-
                 case Sawtooth:
-                    wv = Wave16.curveSawTooth (_samplerate, chunksize, freq, startval);
+                    wv = Wave16.curveSawTooth(_samplerate, chunksize, freq, startval);
                     break;
 
                 case Sine:
-                    wv = Wave16.curveSine (_samplerate, chunksize, freq, startval);
-                    //wv=sweep; // TODO: Experimental
+                    wv = Wave16.curveSine(_samplerate, chunksize, freq, startval);
                     break;
 
                 case Square:
-                    wv = Wave16.curveRect (_samplerate, chunksize, freq, startval);
+                    wv = Wave16.curveRect(_samplerate, chunksize, freq, startval);
                     break;
 
                 case Pulse:
-                    wv = Wave16.curvePulse (_samplerate, chunksize, freq, startval);
+                    wv = Wave16.curvePulse(_samplerate, chunksize, freq, startval);
                     break;
 
                 case Triangle:
-                    wv = Wave16.curveTriangle (_samplerate, chunksize, freq, startval);
+                    wv = Wave16.curveTriangle(_samplerate, chunksize, freq, startval);
                     break;
 
                 case SweepSIN:
-                    int from = startval % sweep.data.length;
-                    int to = from + chunksize;
-                    if (to >= sweep.data.length)
-                        to = sweep.data.length-1;
-                    wv = Wave16.extractSamples (sweep, from, to);
+                case SweepTRI:
+                case SweepSQR:
+                case SweepPUL:
+                    //case SweepSAW:
+                    wv = makeSweep(currentWaveForm, startval, freq, freq2);
                     break;
+
             }
             startval += chunksize;
 

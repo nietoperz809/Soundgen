@@ -124,7 +124,21 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
     {
         if (parent.equals(waveFormSelect))
         {
-            audioTrack.setWaveForm(WaveForm.values()[position]);
+            WaveForm wv = WaveForm.values()[position];
+            String str = wv.name();
+            if (str.startsWith("Sweep"))
+            {
+                freqSlider2.setEnabled(true);
+                freqView2.setEnabled(true);
+                sweepInterval.setEnabled(true);
+            }
+            else
+            {
+                freqSlider2.setEnabled(false);
+                freqView2.setEnabled(false);
+                sweepInterval.setEnabled(false);
+            }
+            audioTrack.setWaveForm(wv);
         }
         else if (parent.equals(scaleSelect))
         {
@@ -152,10 +166,6 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         {
             freqView2.setNumber(progress);
         }
-//        else if (seekBar.equals(sweepInterval))
-//        {
-//            sweepTime =
-//        }
     }
 
 
@@ -171,7 +181,6 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
     public void onStopTrackingTouch(SeekBar seekBar)
     {
         // TODO Auto-generated method stub
-
     }
 
 }

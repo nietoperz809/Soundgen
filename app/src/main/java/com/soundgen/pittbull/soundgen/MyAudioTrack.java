@@ -192,6 +192,13 @@ public class MyAudioTrack extends Thread
                     wv = makeSweep(currentWaveForm, startval, freq, freq2, sweeptim);
                     break;
 
+                case MollChord:
+                    wv = Wave16.sineMoll(_samplerate, chunksize, freq, startval);
+                    break;
+
+                case DurChord:
+                    wv = Wave16.sineDur(_samplerate, chunksize, freq, startval);
+                    break;
             }
             startval += chunksize; // set new chunk offset
 

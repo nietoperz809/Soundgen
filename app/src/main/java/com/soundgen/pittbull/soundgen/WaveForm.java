@@ -6,5 +6,6 @@ package com.soundgen.pittbull.soundgen;
 public enum WaveForm
 {
     OFF, Sine, Sawtooth, Square, Triangle, Pulse,
-    SweepSIN, /*SweepSAW,*/ SweepSQR, SweepTRI, SweepPUL
+    SweepSIN, /*SweepSAW,*/ SweepSQR, SweepTRI, SweepPUL,
+    MollChord, DurChord
 }

@@ -60,7 +60,7 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         this.addView(freqView2, params);
 
         // Scale switcher
-        List strings = Arrays.asList("100", "200", "500", "1000", "2000", "5000", "10000");
+        List strings = Arrays.asList("100", "200", "500", "1000", "2000", "5000", "10000", "20000");
         params = new RelativeLayout.LayoutParams(240, 80);
         params.leftMargin = 420;
         params.topMargin = 10;
@@ -182,5 +182,4 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
     {
         // TODO Auto-generated method stub
     }
-
 }

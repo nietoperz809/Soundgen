@@ -66,6 +66,7 @@ public class MyAudioTrack extends Thread
 
     /**
      * Setter for Waveform
+     *
      * @param i
      */
     synchronized public void setWaveForm(WaveForm i)
@@ -78,6 +79,7 @@ public class MyAudioTrack extends Thread
      */
     synchronized public void dispose()
     {
+        MyApp.Msg("dispose");
         running = false;
         try
         {
@@ -92,17 +94,18 @@ public class MyAudioTrack extends Thread
 
     /**
      * Make new sweep or get a sweep chunk
-     * @param swptype the sweep type
+     *
+     * @param swptype  the sweep type
      * @param startval start offset of next chunk
-     * @param min sweep freq 1
-     * @param max sweep freq 2
+     * @param min      sweep freq 1
+     * @param max      sweep freq 2
      * @return sweep chunk or NULL
      */
     private Wave16 makeSweep(WaveForm swptype, int startval, int min, int max, int time)
     {
         if (_sweep.waveType != swptype || min != sweepmin || max != sweepmax || time != sweeptime)
         {
-            double tl = ((double)time)/10+0.1;
+            double tl = ((double) time) / 10 + 0.1;
             //MyApp.Msg(""+tl+":"+min+":"+max);
             if (swptype == WaveForm.SweepSIN)
                 _sweep = Wave16.sweepSine(_samplerate, sweepmin, sweepmax, tl);
@@ -149,13 +152,22 @@ public class MyAudioTrack extends Thread
             {
                 try
                 {
-                    sleep(100);
+                    sleep(1000);
                 }
                 catch (InterruptedException e)
                 {
-                    return;
+                    MyApp.Msg("wait interrupted");
                 }
                 continue;
+            }
+
+            try
+            {
+                sleep(100);
+            }
+            catch (InterruptedException e)
+            {
+                MyApp.Msg("wait interrupted");
             }
 
             int freq = _seek.getProgress();

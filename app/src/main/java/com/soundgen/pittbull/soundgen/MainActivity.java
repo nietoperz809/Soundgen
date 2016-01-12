@@ -1,45 +1,30 @@
 package com.soundgen.pittbull.soundgen;
 
 import android.app.Activity;
-import android.content.pm.ActivityInfo;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 public class MainActivity extends Activity
 {
-    /**
-     * Sets this App to Fullscreen Landscape
-     * This Class MUST be derived from Activity or it will CRASH!
-     */
-    private void setFullScreenLandscape()
-    {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    }
 
     @Override
     protected void onCreate(Bundle saved)
     {
         super.onCreate(saved);
-        setFullScreenLandscape();
+        MyApp.setFullScreenLandscape(this);
         setContentView(R.layout.activity_main);
 
         if (saved != null)
         {
-            dispose();
+            //dispose();
         }
         create();
     }
@@ -79,6 +64,8 @@ public class MainActivity extends Activity
     @Override
     public void onBackPressed()
     {
+        Intent intent = new Intent(this, SecondActivity.class);
+        startActivity(intent);
     }
 
 

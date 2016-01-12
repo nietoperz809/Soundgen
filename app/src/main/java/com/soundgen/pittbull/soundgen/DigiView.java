@@ -1,6 +1,7 @@
 package com.soundgen.pittbull.soundgen; /**
  * Created by Administrator on 1/6/2016.
  */
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,9 +13,9 @@ public class DigiView extends TextView
 {
     static private Bitmap[] digits = null;
 
-    final int digit_width = 30; //18;
-    final int digit_height = 60; //36;
-    int display[];
+    private final int digit_width = 30; //18;
+    private final int digit_height = 60; //36;
+    private final int[] display;
 
     private boolean visible = true;
 
@@ -61,14 +62,14 @@ public class DigiView extends TextView
     }
 
     @Override
-    public void setEnabled (boolean x)
+    public void setEnabled(boolean x)
     {
         visible = x;
         invalidate();
     }
 
     @Override
-    public void onDraw (Canvas c)
+    public void onDraw(Canvas c)
     {
         if (!visible)
         {

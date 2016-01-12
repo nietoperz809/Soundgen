@@ -18,16 +18,16 @@ import android.widget.TextView;
 
 public class SynthPanel extends RelativeLayout implements OnItemSelectedListener, SeekBar.OnSeekBarChangeListener
 {
-    static WindowManager wm;
-    static final DisplayMetrics dm = new DisplayMetrics();
-    DigiView freqView;
-    DigiView freqView2;
-    Spinner scaleSelect;
-    Spinner waveFormSelect;
-    SeekBar freqSlider;
-    SeekBar freqSlider2;
-    SeekBar sweepInterval;
-    MyAudioTrack audioTrack;
+    private static WindowManager wm;
+    private static final DisplayMetrics dm = new DisplayMetrics();
+    private final DigiView freqView;
+    private final DigiView freqView2;
+    private final Spinner scaleSelect;
+    private final Spinner waveFormSelect;
+    private final SeekBar freqSlider;
+    private final SeekBar freqSlider2;
+    private final SeekBar sweepInterval;
+    private final MyAudioTrack audioTrack;
 
     public SynthPanel(RelativeLayout parent, int posy, Context context)
     {
@@ -60,7 +60,7 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         this.addView(freqView2, params);
 
         // Scale switcher
-        List strings = Arrays.asList(new String[]{"100", "200", "500", "1000", "2000", "5000", "10000"});
+        List strings = Arrays.asList("100", "200", "500", "1000", "2000", "5000", "10000");
         params = new RelativeLayout.LayoutParams(240, 80);
         params.leftMargin = 420;
         params.topMargin = 10;

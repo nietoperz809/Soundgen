@@ -14,47 +14,47 @@ public class MyAudioTrack extends Thread
     /**
      * The player oject
      */
-    AudioTrack my;
+    private AudioTrack my;
     /**
      * fixed sample rate
      */
-    final int _samplerate = 44000;
+    private final int _samplerate = 44000;
     /**
      * fixed buffer size
      */
-    final int chunksize = 10000;
+    private final int chunksize = 10000;
     /**
      * scrollbar for single or first sweep frequency
      */
-    SeekBar _seek;
+    private final SeekBar _seek;
 
-    SeekBar _seekSweep;
+    private final SeekBar _seekSweep;
     /**
      * scrollbar for second sweep frequency
      */
-    SeekBar _seek2;
+    private final SeekBar _seek2;
     /**
      * Thread running flag
      */
-    boolean running = true;
+    private boolean running = true;
     /**
      * Sweep object
      */
-    Wave16 _sweep = new Wave16(0, 0);
+    private Wave16 _sweep = new Wave16(0, 0);
     /**
      * current first sweep frequency
      */
-    int sweepmin;
+    private int sweepmin;
     /**
      * current second sweep frequency
      */
-    int sweepmax;
+    private int sweepmax;
 
-    int sweeptime;
+    private int sweeptime;
     /**
      * current Waveform
      */
-    WaveForm currentWaveForm = WaveForm.OFF;
+    private WaveForm currentWaveForm = WaveForm.OFF;
 
     public MyAudioTrack(SeekBar seek, SeekBar seek2, SeekBar sweeptime)
     {

@@ -161,6 +161,7 @@ public class MyAudioTrack extends Thread
                 continue;
             }
 
+            // Delay
             try
             {
                 sleep(100);
@@ -217,7 +218,10 @@ public class MyAudioTrack extends Thread
             // submit sampling data to player
             if (wv != null)
             {
-                my.write(wv.toShortArray(), 0, wv.data.length);
+                short[] arr = wv.toShortArray();
+                my.write(arr, 0, arr.length);
+                if (DrawView.object != null)
+                    DrawView.object.setSamples(arr);
             }
         }
     }

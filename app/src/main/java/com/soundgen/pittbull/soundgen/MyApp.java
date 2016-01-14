@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.Application;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -52,5 +54,16 @@ public class MyApp extends Application
         act.requestWindowFeature(Window.FEATURE_NO_TITLE);
         act.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
+
+    public static int getScreenWidth()
+    {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getScreenHeight()
+    {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
+
 }
 

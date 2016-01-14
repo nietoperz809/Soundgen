@@ -29,7 +29,7 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
     private final SeekBar sweepInterval;
     private final MyAudioTrack audioTrack;
 
-    public SynthPanel(RelativeLayout parent, int posy, Context context)
+    public SynthPanel (RelativeLayout parent, int posy, Context context)
     {
         super(context);
         if (wm == null)

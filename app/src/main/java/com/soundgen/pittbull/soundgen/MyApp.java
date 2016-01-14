@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -22,6 +25,25 @@ public class MyApp extends Application
     {
         super();
         app = this;
+    }
+
+    /**
+     * Returns hosting Activity
+     * @param v The view that is hosted
+     * @return an Activity or null
+     */
+    public static  Activity getActivity (View v)
+    {
+        Context context =  v.getContext();
+        while (context instanceof ContextWrapper)
+        {
+            if (context instanceof Activity)
+            {
+                return (Activity) context;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        return null;
     }
 
     public static void kill()

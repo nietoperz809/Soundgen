@@ -23,12 +23,12 @@ public class Wave16
     /**
      * Upper level constant
      */
-    private static final double MAX_VALUE = Short.MAX_VALUE;
+    public static final double MAX_VALUE = Short.MAX_VALUE;
 
     /**
      * Lower level constant
      */
-    private static final double MIN_VALUE = Short.MIN_VALUE;
+    public static final double MIN_VALUE = Short.MIN_VALUE;
 
     /**
      * Math constants

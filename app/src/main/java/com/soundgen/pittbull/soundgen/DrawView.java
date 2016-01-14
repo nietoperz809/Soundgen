@@ -11,14 +11,21 @@ import android.view.View;
 
 public class DrawView extends View
 {
-    Paint paint = new Paint();
-    Path path = new Path();
-    Paint crosspaint = new Paint();
-    Path crosspath = new Path();
-    private int _screenX = MyApp.getScreenWidth();
-    private int _screenY = MyApp.getScreenHeight();
-    private int _x2 = _screenX / 2;
-    private int _y2 = _screenY / 2;
+    private final Paint paint = new Paint();
+    private final Path path = new Path();
+    private final Paint crosspaint = new Paint();
+    private final Path crosspath = new Path();
+    private final int _screenX = MyApp.getScreenWidth();
+    private final int _screenY = MyApp.getScreenHeight();
+    private final int _x2 = _screenX / 2;
+    private final int _y2 = _screenY / 2;
+
+    // point calibration vals
+    int _step = _screenX / 1000;
+    float _span_vals = (float) (Wave16.MAX_VALUE - Wave16.MIN_VALUE);
+    float _span_disp = _screenY;
+    float _multy = _span_disp/_span_vals;
+
 
     public static DrawView object;
 
@@ -48,7 +55,12 @@ public class DrawView extends View
 
     public void setSamples(final short[] dat)
     {
-        getActivity().runOnUiThread(new Runnable()
+        Activity act = MyApp.getActivity(this);
+        if (act == null)
+        {
+            return;
+        }
+        act.runOnUiThread(new Runnable()
         {
             @Override
             public void run()
@@ -58,35 +70,20 @@ public class DrawView extends View
         });
     }
 
-    private Activity getActivity()
-    {
-        Context context = getContext();
-        while (context instanceof ContextWrapper)
-        {
-            if (context instanceof Activity)
-            {
-                return (Activity) context;
-            }
-            context = ((ContextWrapper) context).getBaseContext();
-        }
-        return null;
-    }
-
     private void setData(short[] dat)
     {
-//        MyApp.Msg("setData");
-//        path.reset();
-//        path.moveTo(0, _y2);
-//        path.lineTo(300,100);
-//        invalidate();
-            path.reset();
-            int step = _screenX / 256;
-            path.moveTo(0, _y2);
-            for (int x = step; x < _screenX; x += step)
-            {
-                path.lineTo(x, 250+ dat[x]/64);
-            }
-            invalidate(); // redraw;
+        //        MyApp.Msg("setData");
+        //        path.reset();
+        //        path.moveTo(0, _y2);
+        //        path.lineTo(300,100);
+        //        invalidate();
+        path.reset();
+        path.moveTo(0, _y2);
+        for (int x = _step; x < _screenX; x += _step)
+        {
+            path.lineTo(x, _y2 + dat[x] * _multy);
+        }
+        invalidate(); // redraw;
     }
 
     private void drawCross(Canvas c)

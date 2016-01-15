@@ -2,7 +2,6 @@ package com.soundgen.pittbull.soundgen;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -21,11 +20,11 @@ public class DrawView extends View
     private final int _y2 = _screenY / 2;
 
     // point calibration vals
-    int _step = _screenX / 1000;
     float _span_vals = (float) (Wave16.MAX_VALUE - Wave16.MIN_VALUE);
     float _span_disp = _screenY;
     float _multy = _span_disp/_span_vals;
 
+    private boolean oneshot;
 
     public static DrawView object;
 
@@ -43,6 +42,8 @@ public class DrawView extends View
         crosspath.lineTo(_x2, _screenY);
         crosspath.moveTo(0, _y2);
         crosspath.lineTo(_screenX, _y2);
+
+        oneshot = false;
     }
 
     public DrawView(Context context)
@@ -55,6 +56,12 @@ public class DrawView extends View
 
     public void setSamples(final short[] dat)
     {
+        if (oneshot)
+        {
+            return;
+        }
+        oneshot = true;
+
         Activity act = MyApp.getActivity(this);
         if (act == null)
         {
@@ -72,14 +79,10 @@ public class DrawView extends View
 
     private void setData(short[] dat)
     {
-        //        MyApp.Msg("setData");
-        //        path.reset();
-        //        path.moveTo(0, _y2);
-        //        path.lineTo(300,100);
-        //        invalidate();
+        //float step = (float)_screenX / dat.length;
         path.reset();
-        path.moveTo(0, _y2);
-        for (int x = _step; x < _screenX; x += _step)
+        path.moveTo (0, _y2 + dat[0] * _multy);
+        for (int x = 1; x < _screenX; x++)
         {
             path.lineTo(x, _y2 + dat[x] * _multy);
         }

@@ -29,7 +29,8 @@ public class SecondActivity extends Activity implements SeekBar.OnSeekBarChangeL
     {
         if (seekBar.equals(_seek))
         {
-            //MyApp.Msg("seek "+progress);
+            OscilloscopeView v = (OscilloscopeView)this.findViewById(R.id.view);
+            v.setStretch(progress);
         }
     }
 

@@ -11,24 +11,21 @@ import android.view.View;
 
 public class OscilloscopeView extends View
 {
+    public static OscilloscopeView object;
     private final Paint paint = new Paint();
     private final Path path = new Path();
     private final Paint crosspaint = new Paint();
     private final Path crosspath = new Path();
-
-    private int _screenX;
-    private int _screenY;
-    private int _x2;
-    private int _y2;
-
     // point calibration values
     float _span_vals;
     float _span_disp;
     float _multy;
-
+    private int _screenX;
+    private int _screenY;
+    private int _x2;
+    private int _y2;
     private boolean oneshot;
-
-    public static OscilloscopeView object;
+    private int _stretch = 1;
 
     public OscilloscopeView(Context context)
     {
@@ -36,7 +33,7 @@ public class OscilloscopeView extends View
     }
 
     /**
-     * Construtor for XML designer
+     * Constructor for XML designer
      *
      * @param context
      * @param attrs
@@ -79,6 +76,7 @@ public class OscilloscopeView extends View
         crosspath.lineTo(_screenX, _y2);
     }
 
+    private short[] _save;
     public void setSamples(final short[] dat)
     {
         if (oneshot)
@@ -97,17 +95,17 @@ public class OscilloscopeView extends View
             @Override
             public void run()
             {
+                _save = dat;
                 setData(dat);
             }
         });
     }
 
-
     private void setData(short[] dat)
     {
         path.reset();
-        path.moveTo(0, _y2 + dat[0] * _multy);
-        for (int x = 1; x < _screenX; x++)
+        path.moveTo (0, _y2 + dat[0] * _multy);
+        for (int x = 1; x < _screenX; x+= _stretch)
         {
             path.lineTo(x, _y2 + dat[x] * _multy);
         }
@@ -117,6 +115,12 @@ public class OscilloscopeView extends View
     private void drawCross(Canvas c)
     {
         c.drawPath(crosspath, crosspaint);
+    }
+
+    public void setStretch(int x)
+    {
+        _stretch = x+1;
+       setData (_save);
     }
 
     @Override

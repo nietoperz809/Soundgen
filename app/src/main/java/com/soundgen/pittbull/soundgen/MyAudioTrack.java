@@ -220,8 +220,8 @@ public class MyAudioTrack extends Thread
             {
                 short[] arr = wv.toShortArray();
                 my.write(arr, 0, arr.length);
-                if (OscilloscopeView.object != null)
-                    OscilloscopeView.object.setSamples(arr);
+                if (OscilloscopeView._activeView != null)
+                    OscilloscopeView._activeView.setSamples(arr);
             }
         }
     }

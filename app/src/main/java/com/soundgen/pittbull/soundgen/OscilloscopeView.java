@@ -11,11 +11,11 @@ import android.view.View;
 
 public class OscilloscopeView extends View
 {
-    public static OscilloscopeView object;
-    private final Paint paint = new Paint();
-    private final Path path = new Path();
-    private final Paint crosspaint = new Paint();
-    private final Path crosspath = new Path();
+    public static OscilloscopeView _activeView;
+    private final Paint _curvePaint = new Paint();
+    private final Path _curvePath = new Path();
+    private final Paint _crossPaint = new Paint();
+    private final Path _crossPath = new Path();
     // point calibration values
     float _span_vals;
     float _span_disp;
@@ -25,7 +25,8 @@ public class OscilloscopeView extends View
     private int _x2;
     private int _y2;
     private boolean oneshot;
-    private int _stretch = 1;
+    private int _stretchFactor = 1;
+    private short[] _sampleDataSave;
 
     public OscilloscopeView(Context context)
     {
@@ -42,15 +43,15 @@ public class OscilloscopeView extends View
     {
         super(context, attrs);
         setBackgroundColor(Color.RED);
-        object = this;
+        _activeView = this;
 
-        paint.setColor(Color.WHITE);
-        paint.setStrokeWidth(5f);
-        paint.setStyle(Paint.Style.STROKE);
+        _curvePaint.setColor(Color.WHITE);
+        _curvePaint.setStrokeWidth(5f);
+        _curvePaint.setStyle(Paint.Style.STROKE);
 
-        crosspaint.setColor(Color.YELLOW);
-        crosspaint.setStrokeWidth(3f);
-        crosspaint.setStyle(Paint.Style.STROKE);
+        _crossPaint.setColor(Color.YELLOW);
+        _crossPaint.setStrokeWidth(3f);
+        _crossPaint.setStyle(Paint.Style.STROKE);
 
         oneshot = false;
     }
@@ -70,13 +71,12 @@ public class OscilloscopeView extends View
         _multy = _span_disp / _span_vals;
 
         // set cross
-        crosspath.moveTo(_x2, 0);
-        crosspath.lineTo(_x2, _screenY);
-        crosspath.moveTo(0, _y2);
-        crosspath.lineTo(_screenX, _y2);
+        _crossPath.moveTo(_x2, 0);
+        _crossPath.lineTo(_x2, _screenY);
+        _crossPath.moveTo(0, _y2);
+        _crossPath.lineTo(_screenX, _y2);
     }
 
-    private short[] _save;
     public void setSamples(final short[] dat)
     {
         if (oneshot)
@@ -95,32 +95,32 @@ public class OscilloscopeView extends View
             @Override
             public void run()
             {
-                _save = dat;
-                setData(dat);
+                _sampleDataSave = dat;
+                viewData(dat);
             }
         });
     }
 
-    private void setData(short[] dat)
+    private void viewData (short[] dat)
     {
-        path.reset();
-        path.moveTo (0, _y2 + dat[0] * _multy);
-        for (int x = 1; x < _screenX; x+= _stretch)
+        _curvePath.reset();
+        _curvePath.moveTo(0, _y2 + dat[0] * _multy);
+        for (int x = 1; x < _screenX; x++)
         {
-            path.lineTo(x, _y2 + dat[x] * _multy);
+            _curvePath.lineTo(x, _y2 + dat[x/_stretchFactor] * _multy);
         }
         invalidate(); // redraw;
     }
 
     private void drawCross(Canvas c)
     {
-        c.drawPath(crosspath, crosspaint);
+        c.drawPath(_crossPath, _crossPaint);
     }
 
     public void setStretch(int x)
     {
-        _stretch = x+1;
-       setData (_save);
+        _stretchFactor = x+1;
+       viewData(_sampleDataSave);
     }
 
     @Override
@@ -128,6 +128,6 @@ public class OscilloscopeView extends View
     {
         super.onDraw(canvas);
         drawCross(canvas);
-        canvas.drawPath(path, paint);
+        canvas.drawPath(_curvePath, _curvePaint);
     }
 }

@@ -2,11 +2,16 @@ package com.soundgen.pittbull.soundgen;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 
-public class SecondActivity extends Activity implements SeekBar.OnSeekBarChangeListener
+public class SecondActivity extends Activity implements SeekBar.OnSeekBarChangeListener,
+        Button.OnClickListener
 {
     SeekBar _seek;
+    Button _button;
+    OscilloscopeView _osc;
 
     public SecondActivity()
     {
@@ -20,8 +25,11 @@ public class SecondActivity extends Activity implements SeekBar.OnSeekBarChangeL
         MyApp.setFullScreenLandscape(this);
 
         setContentView(R.layout.activity_second);
+        _osc = (OscilloscopeView)this.findViewById(R.id.view);
         _seek = (SeekBar) this.findViewById(R.id.seekBar);
         _seek.setOnSeekBarChangeListener(this);
+        _button = (Button) this.findViewById(R.id.button);
+        _button.setOnClickListener(this);
     }
 
     @Override
@@ -29,8 +37,7 @@ public class SecondActivity extends Activity implements SeekBar.OnSeekBarChangeL
     {
         if (seekBar.equals(_seek))
         {
-            OscilloscopeView v = (OscilloscopeView)this.findViewById(R.id.view);
-            v.setStretch(progress);
+            _osc.setStretch(progress);
         }
     }
 
@@ -47,4 +54,9 @@ public class SecondActivity extends Activity implements SeekBar.OnSeekBarChangeL
     }
 
 
+    @Override
+    public void onClick(View v)
+    {
+        _osc.enableSamples();
+    }
 }

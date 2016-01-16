@@ -24,7 +24,7 @@ public class OscilloscopeView extends View
     private int _screenY;
     private int _x2;
     private int _y2;
-    private boolean oneshot;
+    private boolean oneShotFlag;
     private int _stretchFactor = 1;
     private short[] _sampleDataSave;
 
@@ -53,7 +53,7 @@ public class OscilloscopeView extends View
         _crossPaint.setStrokeWidth(3f);
         _crossPaint.setStyle(Paint.Style.STROKE);
 
-        oneshot = false;
+        oneShotFlag = false;
     }
 
     @Override
@@ -77,13 +77,18 @@ public class OscilloscopeView extends View
         _crossPath.lineTo(_screenX, _y2);
     }
 
+    public void enableSamples()
+    {
+        oneShotFlag = false;
+    }
+
     public void setSamples(final short[] dat)
     {
-        if (oneshot)
+        if (oneShotFlag)
         {
             return;
         }
-        oneshot = true;
+        oneShotFlag = true;
 
         Activity act = MyApp.getActivity(this);
         if (act == null)
@@ -103,6 +108,8 @@ public class OscilloscopeView extends View
 
     private void viewData (short[] dat)
     {
+        if (dat == null)
+            return;
         _curvePath.reset();
         _curvePath.moveTo(0, _y2 + dat[0] * _multy);
         for (int x = 1; x < _screenX; x++)

@@ -24,7 +24,7 @@
 
         <Button
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:text="refresh"
             android:id="@+id/button"

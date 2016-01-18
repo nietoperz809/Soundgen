@@ -3,9 +3,9 @@ package com.soundgen.pittbull.soundgen;
 /**
  * Created by Administrator on 1/10/2016.
  */
-public enum WaveForm
+public enum WaveFormType
 {
-    OFF, Sine, Sawtooth, Square, Triangle, Pulse,
+    OFF, Sine, Sawtooth, Square, Triangle, Pulse, PinkNoise, WhiteNoise,
     SweepSIN, /*SweepSAW,*/ SweepSQR, SweepTRI, SweepPUL,
     MollChord, DurChord
 }

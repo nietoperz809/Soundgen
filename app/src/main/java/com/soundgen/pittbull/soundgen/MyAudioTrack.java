@@ -54,7 +54,7 @@ public class MyAudioTrack extends Thread
     /**
      * current Waveform
      */
-    private WaveForm currentWaveForm = WaveForm.OFF;
+    private WaveFormType currentWaveForm = WaveFormType.OFF;
 
     public MyAudioTrack(SeekBar seek, SeekBar seek2, SeekBar sweeptime)
     {
@@ -69,7 +69,7 @@ public class MyAudioTrack extends Thread
      *
      * @param i
      */
-    synchronized public void setWaveForm(WaveForm i)
+    synchronized public void setWaveForm(WaveFormType i)
     {
         currentWaveForm = i;
     }
@@ -101,20 +101,20 @@ public class MyAudioTrack extends Thread
      * @param max      sweep freq 2
      * @return sweep chunk or NULL
      */
-    private Wave16 makeSweep(WaveForm swptype, int startval, int min, int max, int time)
+    private Wave16 makeSweep(WaveFormType swptype, int startval, int min, int max, int time)
     {
         if (_sweep.waveType != swptype || min != sweepmin || max != sweepmax || time != sweeptime)
         {
             double tl = ((double) time) / 10 + 0.1;
             //MyApp.Msg(""+tl+":"+min+":"+max);
-            if (swptype == WaveForm.SweepSIN)
-                _sweep = Wave16.sweepSine(_samplerate, sweepmin, sweepmax, tl);
-            else if (swptype == WaveForm.SweepTRI)
-                _sweep = Wave16.sweepTriangle(_samplerate, sweepmin, sweepmax, tl);
-            else if (swptype == WaveForm.SweepSQR)
-                _sweep = Wave16.sweepSquare(_samplerate, sweepmin, sweepmax, tl);
-            else if (swptype == WaveForm.SweepPUL)
-                _sweep = Wave16.sweepPulse(_samplerate, sweepmin, sweepmax, tl);
+            if (swptype == WaveFormType.SweepSIN)
+                _sweep = WaveForms.sweepSine(_samplerate, sweepmin, sweepmax, tl);
+            else if (swptype == WaveFormType.SweepTRI)
+                _sweep = WaveForms.sweepTriangle(_samplerate, sweepmin, sweepmax, tl);
+            else if (swptype == WaveFormType.SweepSQR)
+                _sweep = WaveForms.sweepSquare(_samplerate, sweepmin, sweepmax, tl);
+            else if (swptype == WaveFormType.SweepPUL)
+                _sweep = WaveForms.sweepPulse(_samplerate, sweepmin, sweepmax, tl);
             sweepmin = min;
             sweepmax = max;
             sweeptime = time;
@@ -148,7 +148,7 @@ public class MyAudioTrack extends Thread
         while (running)
         {
             // if Wave is OFF just give away CPU cycles
-            if (currentWaveForm == WaveForm.OFF)
+            if (currentWaveForm == WaveFormType.OFF)
             {
                 try
                 {
@@ -178,23 +178,23 @@ public class MyAudioTrack extends Thread
             switch (currentWaveForm)
             {
                 case Sawtooth:
-                    wv = Wave16.curveSawTooth(_samplerate, chunksize, freq, startval);
+                    wv = WaveForms.curveSawTooth(_samplerate, chunksize, freq, startval);
                     break;
 
                 case Sine:
-                    wv = Wave16.curveSine(_samplerate, chunksize, freq, startval);
+                    wv = WaveForms.curveSine(_samplerate, chunksize, freq, startval);
                     break;
 
                 case Square:
-                    wv = Wave16.curveRect(_samplerate, chunksize, freq, startval);
+                    wv = WaveForms.curveRect(_samplerate, chunksize, freq, startval);
                     break;
 
                 case Pulse:
-                    wv = Wave16.curvePulse(_samplerate, chunksize, freq, startval);
+                    wv = WaveForms.curvePulse(_samplerate, chunksize, freq, startval);
                     break;
 
                 case Triangle:
-                    wv = Wave16.curveTriangle(_samplerate, chunksize, freq, startval);
+                    wv = WaveForms.curveTriangle(_samplerate, chunksize, freq, startval);
                     break;
 
                 case SweepSIN:
@@ -206,11 +206,19 @@ public class MyAudioTrack extends Thread
                     break;
 
                 case MollChord:
-                    wv = Wave16.sineMoll(_samplerate, chunksize, freq, startval);
+                    wv = WaveForms.sineMoll(_samplerate, chunksize, freq, startval);
                     break;
 
                 case DurChord:
-                    wv = Wave16.sineDur(_samplerate, chunksize, freq, startval);
+                    wv = WaveForms.sineDur(_samplerate, chunksize, freq, startval);
+                    break;
+
+                case PinkNoise:
+                    wv = Noise.pinkNoise(_samplerate, chunksize);
+                    break;
+
+                case WhiteNoise:
+                    wv = Noise.whiteNoise(_samplerate, chunksize);
                     break;
             }
             startval += chunksize; // set new chunk offset

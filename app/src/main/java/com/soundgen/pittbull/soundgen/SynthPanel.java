@@ -73,7 +73,7 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
         this.addView(scaleSelect, params);
 
         // Waveform switcher
-        strings = Arrays.asList(WaveForm.values());
+        strings = Arrays.asList(WaveFormType.values());
         params = new RelativeLayout.LayoutParams(240, 80);
         params.leftMargin = 670;
         params.topMargin = 10;
@@ -124,7 +124,7 @@ public class SynthPanel extends RelativeLayout implements OnItemSelectedListener
     {
         if (parent.equals(waveFormSelect))
         {
-            WaveForm wv = WaveForm.values()[position];
+            WaveFormType wv = WaveFormType.values()[position];
             String str = wv.name();
             if (str.startsWith("Sweep"))
             {

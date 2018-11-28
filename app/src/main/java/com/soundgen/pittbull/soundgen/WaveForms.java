@@ -24,17 +24,19 @@ public class WaveForms
         return out;
     }
 
+    private static final double pow1 = Math.pow(2.0, 3.0 / 12.0);
+    private static final double pow2 = Math.pow(2.0, 7.0 / 12.0);
+    private static final double pow3 = Math.pow(2.0, 4.0 / 12.0);
+
     static public Wave16 sineMoll(int samplingrate, int samples, double startfreq, int startval)
     {
-        double[] freq = {startfreq, startfreq * Math.pow(2.0, 3.0 / 12.0),
-                startfreq * Math.pow(2.0, 7.0 / 12.0)};
+        double[] freq = {startfreq, startfreq*pow1, startfreq*pow2};
         return curveSine(samplingrate, samples, freq, startval);
     }
 
     static public Wave16 sineDur(int samplingrate, int samples, double startfreq, int startval)
     {
-        double[] freq = {startfreq, startfreq * Math.pow(2.0, 4.0 / 12.0),
-                startfreq * Math.pow(2.0, 7.0 / 12.0)};
+        double[] freq = {startfreq, startfreq*pow3, startfreq*pow2};
         return curveSine(samplingrate, samples, freq, startval);
     }
 

@@ -18,11 +18,11 @@ public class MyAudioTrack extends Thread
     /**
      * fixed sample rate
      */
-    private final int _samplerate = 44000;
+    static private final int _samplerate = 44000;
     /**
      * fixed buffer size
      */
-    private final int chunksize = 10000;
+    static private final int chunksize = 10000;
     /**
      * scrollbar for single or first sweep frequency
      */
@@ -147,24 +147,16 @@ public class MyAudioTrack extends Thread
         // run in a loop
         while (running)
         {
-            // if Wave is OFF just give away CPU cycles
+            int sleeptime;
             if (currentWaveForm == WaveFormType.OFF)
-            {
-                try
-                {
-                    sleep(1000);
-                }
-                catch (InterruptedException e)
-                {
-                    MyApp.Msg("wait interrupted");
-                }
-                continue;
-            }
+                sleeptime = 1000;
+            else
+                sleeptime = 100;
 
             // Delay
             try
             {
-                sleep(100);
+                sleep(sleeptime);
             }
             catch (InterruptedException e)
             {
@@ -177,6 +169,9 @@ public class MyAudioTrack extends Thread
 
             switch (currentWaveForm)
             {
+                case OFF:
+                    continue;
+
                 case Sawtooth:
                     wv = WaveForms.curveSawTooth(_samplerate, chunksize, freq, startval);
                     break;
